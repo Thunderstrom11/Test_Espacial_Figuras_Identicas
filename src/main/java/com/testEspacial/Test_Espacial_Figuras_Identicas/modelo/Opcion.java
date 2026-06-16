@@ -1,40 +1,73 @@
+package com.testEspacial.Test_Espacial_Figuras_Identicas.modelo;
 
+import javax.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
+import org.openxava.annotations.*;
+import lombok.*;
 
-/**
- * <b>Descripci髇:</b>
- * Representa las opciones A, B, C, D y E de cada ejercicio.
- * 
- * <b>Responsabilidad:</b>
- * Permitir la selecci髇 de la figura correcta.
- * 
- * <b>Atributos:</b>
- * idOpcion: Identificador.
- * letra: A, B, C, D o E.
- * imagen: Imagen de la opci髇.
- * esCorrecta: Indica si es la respuesta correcta.
- * 
- * <b>M閠odos:</b>
- * seleccionarRespuesta(): Marca la opci髇 elegida.
- * @author alond
- * @version 1.0
- * @created 11-jun-2026 1:27:39 p.爉.
- */
+@Entity
+@Getter @Setter
+@View(members = 
+    "Datos de la Opci贸n { ejercicio; letra; esCorrecta };" +
+    "Imagen de la Opci贸n { imagen }"
+)
+@Tab(properties = "letra, esCorrecta, ejercicio.numeroEjercicio, ejercicio.test.nombreTest",
+     defaultOrder = "ejercicio.numeroEjercicio asc, letra asc")
 public class Opcion {
 
-	private boolean esCorrecta;
-	private int idOpcion;
-	private String imagen;
-	private String letra;
-	public RespuestaUsuario m_RespuestaUsuario;
+    @Id
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
+    @Column(length = 32)
+    @Hidden
+    String oid;
 
-	public Opcion(){
+    @Column(length = 1)
+    @Required
+    String letra;
+    
+    @Files
+    @Column(length = 32)
+    String imagen;
+    
+    @Column(length = 1)
+    boolean esCorrecta;
 
-	}
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @DescriptionsList(descriptionProperties = "numeroEjercicio, test.nombreTest")
+    @Required
+    Ejercicio ejercicio;
+    
+    // Relacion con RespuestaUsuario
+    @OneToMany(mappedBy = "opcionSeleccionada")
+    Collection<RespuestaUsuario> respuestas;
 
-	public void finalize() throws Throwable {
-
-	}
-	public void seleccionarRespuesta(){
-
-	}
-}//end Opcion
+    public boolean seleccionarRespuesta() {
+        return this.esCorrecta;
+    }
+    
+    public boolean verificarSeleccion() {
+        return this.esCorrecta;
+    }
+    
+    public String getDescripcion() {
+        return "Opci贸n " + letra + " del Ejercicio " + 
+               (ejercicio != null ? ejercicio.getNumeroEjercicio() : "?") +
+               (esCorrecta ? " (CORRECTA)" : "");
+    }
+    
+    @PrePersist
+    @PreUpdate
+    public void validarLetra() {
+        if (letra == null || letra.isEmpty()) {
+            throw new IllegalStateException("La letra de la opci贸n es obligatoria");
+        }
+        String letraUpper = letra.toUpperCase();
+        if (!letraUpper.matches("[A-E]")) {
+            throw new IllegalStateException(
+                "La letra debe ser A, B, C, D o E. Valor recibido: " + letra
+            );
+        }
+        this.letra = letraUpper;
+    }
+}
