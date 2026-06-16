@@ -1,38 +1,75 @@
+package com.testEspacial.Test_Espacial_Figuras_Identicas.modelo;
 
+import java.util.Arrays;
+import java.util.List;
 
-/**
- * <b>DescripciÛn:</b>
- * Representa el nivel de acceso que posee un usuario dentro de la aplicaciÛn.
- * 
- * <b>Responsabilidad:</b>
- * Definir y clasificar el tipo de usuario con el fin de gestionar los permisos de
- * interacciÛn con el sistema y los tests.
- * 
- * <b>Atributos:</b>
- * idRol: Identificador ˙nico del rol asignado.
- * nombreRol: Nombre descriptivo del rol (ej. "Administrador", "Sujeto",
- * "Analista").
- * 
- * <b>MÈtodos:</b>
- * getNombreRol(): Retorna el nombre del rol para que el sistema valide quÈ
- * interfaz o permisos mostrarle al usuario.
- * @author diego
- * @version 1.0
- * @created 11-jun-2026 1:27:40 p.†m.
- */
+// Representa el nivel de acceso (rol) de un usuario en el sistema
 public class Rol {
 
-	private int idRol;
-	private String nombreRol;
+    // Roles oficiales permitidos
+    public static final String ADMINISTRADOR = "Administrador";
+    public static final String PSICOLOGO = "Psic√≥logo";
+    public static final String SUJETO = "Sujeto";
 
-	public Rol(){
+    // Lista de roles v√°lidos (se usa para validar el nombre del rol)
+    private static final List<String> ROLES_VALIDOS =
+            Arrays.asList(ADMINISTRADOR, PSICOLOGO, SUJETO);
 
-	}
+    // Identificador √∫nico del rol
+    private int idRol;
 
-	public void finalize() throws Throwable {
+    // Nombre del rol (solo puede ser uno de los roles v√°lidos)
+    private String nombreRol;
 
-	}
-	public String getNombreRol(){
-		return "";
-	}
-}//end Rol
+    // Constructor vac√≠o
+    public Rol() {
+    }
+
+    // Constructor con el nombre del rol
+    public Rol(String nombreRol) {
+        setNombreRol(nombreRol);
+    }
+
+    // Devuelve el nombre del rol
+    public String getNombreRol() {
+        return nombreRol;
+    }
+
+    // Asigna el nombre del rol; valida que sea uno de los roles v√°lidos
+    public void setNombreRol(String nombreRol) {
+        if (nombreRol == null || !ROLES_VALIDOS.contains(nombreRol)) {
+            throw new IllegalArgumentException(
+                "Rol no v√°lido. Use: Administrador, Psic√≥logo o Sujeto.");
+        }
+        this.nombreRol = nombreRol;
+    }
+
+    public int getIdRol() {
+        return idRol;
+    }
+
+    public void setIdRol(int idRol) {
+        this.idRol = idRol;
+    }
+
+    // Indica si el rol es Administrador
+    public boolean esAdministrador() {
+        return ADMINISTRADOR.equals(nombreRol);
+    }
+
+    // Indica si el rol es Psic√≥logo
+    public boolean esPsicologo() {
+        return PSICOLOGO.equals(nombreRol);
+    }
+
+    // Indica si el rol es Sujeto
+    public boolean esSujeto() {
+        return SUJETO.equals(nombreRol);
+    }
+
+    // Devuelve los datos del rol
+    @Override
+    public String toString() {
+        return "Rol{idRol=" + idRol + ", nombreRol=" + nombreRol + '}';
+    }
+}
