@@ -1,37 +1,94 @@
+package com.testEspacial.Test_Espacial_Figuras_Identicas.modelo;
 
-
-/**
- * <b>Descripci髇:</b>
- * Almacena la respuesta seleccionada por el usuario en cada ejercicio.
- * 
- * <b>Responsabilidad:</b>
- * Registrar y validar la respuesta.
- * 
- * <b>Atributos:</b>
- * idRespuesta: Identificador.
- * tiempoRespuesta: Tiempo de respuesta.
- * esCorrecta:  Resultado de la respuesta.
- * 
- * <b>M閠odos:</b>
- * validarRespuesta(): Verifica si la respuesta es correcta.
- * @author alond
- * @version 1.0
- * @created 11-jun-2026 1:27:32 p.爉.
- */
+// Representa la respuesta que un sujeto da a un ejercicio del test
 public class RespuestaUsuario {
 
-	private int idRespuesta;
-	private boolean seleccionCorrecta;
-	private double tiempoRespuesta;
+    // Identificador 煤nico de la respuesta
+    private int idRespuesta;
 
-	public RespuestaUsuario(){
+    // Indica si la opci贸n elegida fue la correcta
+    private boolean seleccionCorrecta;
 
-	}
+    // Tiempo que tard贸 en responder (en segundos)
+    private double tiempoRespuesta;
 
-	public void finalize() throws Throwable {
+    // Usuario al que pertenece la respuesta (obligatorio)
+    private Usuario usuario;
 
-	}
-	public void validarRespuesta(){
+    // Opci贸n (A-E) elegida por el usuario
+    private Opcion opcion;
 
-	}
-}//end RespuestaUsuario
+    // Constructor vac铆o
+    public RespuestaUsuario() {
+    }
+
+    // Constructor con los datos principales
+    public RespuestaUsuario(Usuario usuario, Opcion opcion, double tiempoRespuesta) {
+        this.usuario = usuario;
+        this.opcion = opcion;
+        this.tiempoRespuesta = tiempoRespuesta;
+    }
+
+    // Valida la respuesta: la correcci贸n se obtiene desde la clase Opcion
+    public void validarRespuesta() {
+        this.seleccionCorrecta = opcion != null && opcion.isEsCorrecta();
+    }
+
+    // Devuelve la letra (A-E) de la opci贸n elegida, o null si no eligi贸 ninguna
+    public String getLetraSeleccionada() {
+        return opcion != null ? opcion.getLetra() : null;
+    }
+
+    // ---- Getters y setters ----
+
+    public int getIdRespuesta() {
+        return idRespuesta;
+    }
+
+    public void setIdRespuesta(int idRespuesta) {
+        this.idRespuesta = idRespuesta;
+    }
+
+    public boolean isSeleccionCorrecta() {
+        return seleccionCorrecta;
+    }
+
+    public void setSeleccionCorrecta(boolean seleccionCorrecta) {
+        this.seleccionCorrecta = seleccionCorrecta;
+    }
+
+    public double getTiempoRespuesta() {
+        return tiempoRespuesta;
+    }
+
+    public void setTiempoRespuesta(double tiempoRespuesta) {
+        this.tiempoRespuesta = tiempoRespuesta;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public Opcion getOpcion() {
+        return opcion;
+    }
+
+    public void setOpcion(Opcion opcion) {
+        this.opcion = opcion;
+    }
+
+    // Devuelve los datos de la respuesta
+    @Override
+    public String toString() {
+        return "RespuestaUsuario{" +
+                "idRespuesta=" + idRespuesta +
+                ", letra=" + getLetraSeleccionada() +
+                ", seleccionCorrecta=" + seleccionCorrecta +
+                ", tiempoRespuesta=" + tiempoRespuesta +
+                '}';
+    }
+}
